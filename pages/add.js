@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { supabase } from '../utils/supabase';
 import { useRouter } from 'next/router';
-import { ArrowLeft, Save } from 'lucide-react';
+import { ChevronLeft, FileText } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AddVehicle() {
   const [name, setName] = useState('');
-  const [docType, setDocType] = useState('RC');
+  const [docType, setDocType] = useState('Registration (RC)');
   const [url, setUrl] = useState('');
   const router = useRouter();
 
   const handleSave = async () => {
+    if(!name || !url) return alert("Please fill all fields");
     const { error } = await supabase.from('vehicles').insert([
       { vehicle_name: name, document_type: docType, rc_url: url }
     ]);
@@ -19,19 +20,51 @@ export default function AddVehicle() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white p-6">
+    <div className="min-h-screen bg-[#050714] text-white p-6 font-sans">
       <div className="max-w-md mx-auto pt-10">
-        <Link href="/admin" className="text-slate-500 flex items-center gap-2 mb-8"><ArrowLeft size={16}/> Back</Link>
-        <h1 className="text-3xl font-black italic uppercase mb-8">Add Document</h1>
-        <div className="space-y-6">
-          <input placeholder="Vehicle Name (e.g. XL6)" className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl" onChange={(e) => setName(e.target.value)} />
-          <select className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl" onChange={(e) => setDocType(e.target.value)}>
-            <option value="RC">Registration (RC)</option>
-            <option value="Insurance">Insurance</option>
-            <option value="Pollution">Pollution (PUC)</option>
-          </select>
-          <input placeholder="Document Google Drive Link" className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl" onChange={(e) => setUrl(e.target.value)} />
-          <button onClick={handleSave} className="w-full bg-blue-600 p-4 rounded-2xl font-bold flex items-center justify-center gap-2"><Save size={20}/> Save to Vault</button>
+        
+        <Link href="/admin" className="text-slate-500 flex items-center gap-1 mb-10 hover:text-white transition-colors font-bold uppercase text-[10px] tracking-widest">
+          <ChevronLeft size={18}/> Back
+        </Link>
+
+        <h1 className="text-4xl font-black italic uppercase tracking-tighter mb-10">
+          ADD DOCUMENT
+        </h1>
+
+        <div className="space-y-4">
+          <div className="bg-[#0D1126] rounded-[1.5rem] p-2 border border-white/5">
+            <input 
+              placeholder="Vehicle Name (e.g. XL6)" 
+              className="w-full bg-transparent p-4 outline-none font-bold placeholder:text-slate-600" 
+              onChange={(e) => setName(e.target.value)} 
+            />
+          </div>
+
+          <div className="bg-[#0D1126] rounded-[1.5rem] p-2 border border-white/5">
+            <select 
+              className="w-full bg-transparent p-4 outline-none font-bold appearance-none cursor-pointer" 
+              onChange={(e) => setDocType(e.target.value)}
+            >
+              <option className="bg-[#0D1126]">Registration (RC)</option>
+              <option className="bg-[#0D1126]">Insurance</option>
+              <option className="bg-[#0D1126]">Pollution (PUC)</option>
+            </select>
+          </div>
+
+          <div className="bg-[#0D1126] rounded-[1.5rem] p-2 border border-white/5">
+            <input 
+              placeholder="Document Google Drive Link" 
+              className="w-full bg-transparent p-4 outline-none font-bold placeholder:text-slate-600" 
+              onChange={(e) => setUrl(e.target.value)} 
+            />
+          </div>
+
+          <button 
+            onClick={handleSave} 
+            className="w-full bg-[#2B7FFF] p-6 rounded-[1.5rem] font-black italic uppercase tracking-widest flex items-center justify-center gap-3 mt-6 shadow-xl shadow-blue-600/20 hover:bg-[#3b8bff] transition-all active:scale-95"
+          >
+            <FileText size={20} /> Save to Vault
+          </button>
         </div>
       </div>
     </div>
